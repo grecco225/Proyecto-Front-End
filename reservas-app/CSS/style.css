@@ -1,0 +1,395 @@
+/* ===== Reset ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== Variables ===== */
+:root {
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-bg: #f4f5f7;
+    --color-white: #ffffff;
+    --color-text: #1e1e2e;
+    --color-text-light: #6b7280;
+    --color-border: #e5e7eb;
+
+    --color-success: #16a34a;
+    --color-warning: #d97706;
+    --color-danger: #dc2626;
+
+    --radius: 10px;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+}
+
+/* ===== Base ===== */
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* 👈 esto es lo que faltaba */
+}
+
+main {
+    flex: 1;
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--spacing-lg) var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+}
+
+section {
+    background-color: var(--color-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+}
+
+/* ===== Header ===== */
+header {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-white);
+    padding: 2.5rem var(--spacing-md) 1.5rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+header p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    margin-top: 0.35rem;
+}
+
+/* ===== Nav ===== */
+nav {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+}
+
+nav a:hover {
+    background-color: var(--color-bg);
+    color: var(--color-primary);
+}
+
+/* ===== Formulario ===== */
+#reservation-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-family: inherit;
+    background-color: var(--color-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: var(--color-white);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ===== Botones ===== */
+button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    border-radius: var(--radius);
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+#submit-btn {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    grid-column: 1 / -1;
+    justify-self: start;
+}
+
+#submit-btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+#submit-btn:active {
+    transform: scale(0.97);
+}
+
+.btn-action {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+    margin-right: 0.3rem;
+    margin-bottom: 0.25rem;
+}
+
+.btn-edit {
+    background-color: #eef2ff;
+    color: var(--color-primary);
+}
+
+.btn-edit:hover {
+    background-color: #e0e7ff;
+}
+
+.btn-delete {
+    background-color: #f3f4f6;
+    color: var(--color-text-light);
+}
+
+.btn-delete:hover {
+    background-color: #e5e7eb;
+}
+
+.btn-confirm {
+    background-color: #dcfce7;
+    color: var(--color-success);
+}
+
+.btn-confirm:hover {
+    background-color: #bbf7d0;
+}
+
+.btn-cancel {
+    background-color: #fee2e2;
+    color: var(--color-danger);
+}
+
+.btn-cancel:hover {
+    background-color: #fecaca;
+}
+
+/* ===== Tabla ===== */
+#reservations-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+#reservations-table thead th {
+    text-align: left;
+    color: var(--color-text-light);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.7rem;
+    border-bottom: 2px solid var(--color-border);
+}
+
+#reservations-table tbody td {
+    padding: 0.7rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+#reservations-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+#reservations-table tbody tr:hover {
+    background-color: var(--color-bg);
+}
+
+/* ===== Badges de estado ===== */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-pendiente {
+    background-color: #fef3c7;
+    color: var(--color-warning);
+}
+
+.badge-confirmada {
+    background-color: #dcfce7;
+    color: var(--color-success);
+}
+
+.badge-cancelada {
+    background-color: #fee2e2;
+    color: var(--color-danger);
+}
+
+/* ===== Animación ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.3s ease;
+}
+
+/* ===== Footer ===== */
+footer {
+    background-color: var(--color-text);
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    padding: var(--spacing-md);
+    font-size: 0.8rem;
+}
+
+/* ===== Filtros (búsqueda + categoría + estado) ===== */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.filtros input,
+.filtros select {
+    padding: 0.55rem 0.8rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-family: inherit;
+    background-color: var(--color-bg);
+}
+
+.filtros input {
+    flex: 1;
+    min-width: 180px;
+}
+
+/* ===== Mensajes de error ===== */
+.error-msg {
+    display: block;
+    color: var(--color-danger);
+    font-size: 0.78rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== Estadísticas ===== */
+#estadisticas-contenido {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.stat-card {
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    padding: 0.9rem 1.2rem;
+    text-align: center;
+    min-width: 120px;
+}
+
+.stat-numero {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.stat-etiqueta {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--color-text-light);
+    text-transform: capitalize;
+    margin-top: 0.15rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    #reservation-form {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: var(--spacing-md);
+    }
+
+    #reservations-section {
+        overflow-x: auto;
+    }
+
+    #reservations-table {
+        min-width: 600px;
+    }
+}

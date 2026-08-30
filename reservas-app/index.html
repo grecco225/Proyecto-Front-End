@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Reservas App</title>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>App de reservas Web</h1>
+            <p>Reservación y consulta para administrar espacios y servicios alquilados</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#form-section">Nueva Reserva</a></li>
+            <li><a href="#reservas-seccion">Reservas</a></li>
+            <li><a href="#estado-seccion">Estadísticas</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="form-section" aria-labelledby="form-heading">
+            <h2 id="form-heading">Nueva Reserva</h2>
+
+            <form id="reservation-form">
+
+                <div class="form-grupo">
+                    <label for="cliente">Cliente</label>
+                    <input type="text" id="cliente" name="cliente" required minlength="3" placeholder="Nombre del cliente">
+                </div>
+
+                <div class="form-grupo">
+                    <label for="espacio">Espacio</label>
+                    <input type="text" id="espacio" name="espacio" required placeholder="Ej: Sala A">
+                </div>
+
+                <div class="form-grupo">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="Sala de reuniones">Sala de reuniones</option>
+                        <option value="Cancha deportiva">Cancha deportiva</option>
+                        <option value="Consultorio">Consultorio</option>
+                        <option value="Auditorio">Auditorio</option>
+                        <option value="Espacio de coworking">Espacio de coworking</option>
+                    </select>
+                </div>
+
+                <div class="form-grupo">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                    <span class="error-msg" id="error-fecha"></span>
+                </div>
+
+                <div class="form-grupo">
+                    <label for="hora">Hora</label>
+                    <input type="time" id="hora" name="hora" required>
+                </div>
+
+                <div class="form-grupo full-width">
+                    <label for="notas">Notas</label>
+                    <textarea id="notas" name="notas" rows="2" placeholder="Detalles adicionales"></textarea>
+                </div>
+
+                <span class="error-msg" id="error-conflicto"></span>
+
+                <button type="submit" id="submit-btn">Crear reserva</button>
+
+            </form>
+        </section>
+
+        <section id="reservas-seccion" aria-labelledby="reservas-heading">
+            <h2 id="reservas-heading">Reservas registradas</h2>
+
+            <div class="filtros">
+                <input type="text" id="buscador" placeholder="Buscar por cliente o espacio...">
+
+                <select id="filtro-categoria">
+                    <option value="todas">Todas las categorías</option>
+                    <option value="Sala de reuniones">Sala de reuniones</option>
+                    <option value="Cancha deportiva">Cancha deportiva</option>
+                    <option value="Consultorio">Consultorio</option>
+                    <option value="Auditorio">Auditorio</option>
+                    <option value="Espacio de coworking">Espacio de coworking</option>
+                </select>
+
+                <select id="filtro-estado">
+                    <option value="todos">Todos los estados</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="confirmada">Confirmada</option>
+                    <option value="cancelada">Cancelada</option>
+                </select>
+            </div>
+
+            <!-- Futura posición de JS -->
+            <table id="reservacion-tabla">
+                <thead>
+                    <tr>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Espacio</th>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="reservacion-tbody">
+                    <!-- Filas ingresadas dinámicamente con JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="estado-seccion" aria-labelledby="stats-heading">
+            <h2 id="stats-heading">Estadísticas</h2>
+            <div id="estadisticas-contenido">
+                <!-- Tarjetas de totales insertadas dinámicamente con JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Sistema de Gestión de Reservas — Proyecto académico</p>
+    </footer>
+
+    <script src="js/app.js" defer></script>
+</body>
+
+</html>
