@@ -41,6 +41,7 @@ let filtroEstado = 'todos';
 
 // ============================================
 // PARTE 2 — Utilidades: generar ID y guardar en LocalStorage
+// ============================================
 
 // Genera un ID único simple para cada reserva
 function generarId() {
@@ -52,8 +53,20 @@ function guardarEnLocalStorage() {
     localStorage.setItem('reservas', JSON.stringify(reservas));
 }
 
+// Traduce el estado de una reserva a una clase de color de Bootstrap
+function obtenerClaseEstado(estado) {
+    const clases = {
+        pendiente: 'text-bg-warning',
+        confirmada: 'text-bg-success',
+        cancelada: 'text-bg-danger'
+    };
+    return clases[estado] || 'text-bg-secondary';
+}
 
+
+// ============================================
 // PARTE 3 — Renderizar la tabla de reservas
+// ============================================
 
 function renderizarTabla(lista = reservas) {
     // Se limpia la tabla antes de volver a pintarla
@@ -68,7 +81,7 @@ function renderizarTabla(lista = reservas) {
 
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" style="text-align:center; color: var(--color-text-light); padding: 1.5rem;">
+                <td colspan="8" style="text-align:center; color: var(--color-text-light); padding: 1.5rem;">
                     ${mensaje}
                 </td>
             </tr>
@@ -87,12 +100,15 @@ function renderizarTabla(lista = reservas) {
             <td>${reserva.categoria}</td>
             <td>${reserva.fecha}</td>
             <td>${reserva.hora}</td>
-            <td><span class="badge badge-${reserva.estado}">${reserva.estado}</span></td>
+            <td>${reserva.notas || ''}</td>
+            <td><span class="badge ${obtenerClaseEstado(reserva.estado)}">${reserva.estado}</span></td>
             <td>
-                <button class="btn-action btn-confirm" data-action="confirmar">Confirmar</button>
-                <button class="btn-action btn-cancel" data-action="cancelar">Cancelar</button>
-                <button class="btn-action btn-edit" data-action="editar">Editar</button>
-                <button class="btn-action btn-delete" data-action="eliminar">Eliminar</button>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-success btn-sm" data-action="confirmar">Confirmar</button>
+                    <button class="btn btn-warning btn-sm" data-action="cancelar">Cancelar</button>
+                    <button class="btn btn-primary btn-sm" data-action="editar">Editar</button>
+                    <button class="btn btn-danger btn-sm" data-action="eliminar">Eliminar</button>
+                </div>
             </td>
         `;
         tbody.appendChild(fila);
@@ -102,6 +118,7 @@ function renderizarTabla(lista = reservas) {
 
 // ============================================
 // PARTE 3.1 — Búsqueda + filtros combinados (Módulos 2 y 3)
+// ============================================
 
 function obtenerReservasFiltradas() {
     return reservas.filter(reserva => {
@@ -117,7 +134,9 @@ function obtenerReservasFiltradas() {
 }
 
 
+// ============================================
 // PARTE 3.2 — Estadísticas (Módulo 4)
+// ============================================
 
 function calcularEstadisticas() {
     const total = reservas.length;
@@ -132,42 +151,40 @@ function calcularEstadisticas() {
     return { total, porEstado, porCategoria };
 }
 
+function crearTarjetaEstadistica(numero, etiqueta, colorTexto) {
+    return `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <p class="display-6 fw-bold ${colorTexto} mb-1">${numero}</p>
+                    <p class="card-text text-muted mb-0">${etiqueta}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function renderizarEstadisticas() {
     const { total, porEstado, porCategoria } = calcularEstadisticas();
 
     let tarjetasCategoria = '';
     for (const categoria in porCategoria) {
-        tarjetasCategoria += `
-            <div class="stat-card">
-                <span class="stat-numero">${porCategoria[categoria]}</span>
-                <span class="stat-etiqueta">${categoria}</span>
-            </div>
-        `;
+        tarjetasCategoria += crearTarjetaEstadistica(porCategoria[categoria], categoria, 'text-secondary');
     }
 
     statsContenedor.innerHTML = `
-        <div class="stat-card">
-            <span class="stat-numero">${total}</span>
-            <span class="stat-etiqueta">Total de reservas</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-numero">${porEstado.pendiente}</span>
-            <span class="stat-etiqueta">Pendientes</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-numero">${porEstado.confirmada}</span>
-            <span class="stat-etiqueta">Confirmadas</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-numero">${porEstado.cancelada}</span>
-            <span class="stat-etiqueta">Canceladas</span>
-        </div>
+        ${crearTarjetaEstadistica(total, 'Total de reservas', 'text-primary')}
+        ${crearTarjetaEstadistica(porEstado.pendiente, 'Pendientes', 'text-warning')}
+        ${crearTarjetaEstadistica(porEstado.confirmada, 'Confirmadas', 'text-success')}
+        ${crearTarjetaEstadistica(porEstado.cancelada, 'Canceladas', 'text-danger')}
         ${tarjetasCategoria}
     `;
 }
 
 
+// ============================================
 // PARTE 3.3 — Refresca tabla (con filtros) y estadísticas juntas
+// ============================================
 
 function actualizarVista() {
     renderizarTabla(obtenerReservasFiltradas());
@@ -177,6 +194,7 @@ function actualizarVista() {
 
 // ============================================
 // PARTE 4 — Evento submit del formulario (crear / editar reserva)
+// ============================================
 
 form.addEventListener('submit', function (evento) {
     evento.preventDefault(); // evita que la página se recargue
