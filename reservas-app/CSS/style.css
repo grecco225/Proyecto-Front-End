@@ -117,13 +117,13 @@ button {
 }
 
 /* ===== Tabla ===== */
-#reservations-table {
+#reservations-table, #reservacion-tabla {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.88rem;
 }
 
-#reservations-table thead th {
+#reservations-table thead th, #reservacion-tabla thead th {
     text-align: left;
     color: var(--color-text-light);
     font-size: 0.75rem;
@@ -133,16 +133,16 @@ button {
     border-bottom: 2px solid var(--color-border);
 }
 
-#reservations-table tbody td {
+#reservations-table tbody td, #reservacion-tabla tbody td {
     padding: 0.7rem;
     border-bottom: 1px solid var(--color-border);
 }
 
-#reservations-table tbody tr {
+#reservations-table tbody tr, #reservacion-tabla tbody tr {
     transition: background-color 0.15s ease;
 }
 
-#reservations-table tbody tr:hover {
+#reservations-table tbody tr:hover, #reservacion-tabla tbody tr:hover {
     background-color: var(--color-bg);
 }
 
@@ -255,11 +255,11 @@ button {
         padding: var(--spacing-md);
     }
 
-    #reservations-section {
+    #reservations-section, #reservas {
         overflow-x: auto;
     }
 
-    #reservations-table {
+    #reservations-table, #reservacion-tabla {
         min-width: 600px;
     }
 }

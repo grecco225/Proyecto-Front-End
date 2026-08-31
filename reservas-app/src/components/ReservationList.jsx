@@ -12,7 +12,7 @@ export default function ReservationList({
 
   return (
     <div className="table-responsive shadow-sm">
-      <table className="table table-hover table-bordered align-middle mb-0">
+      <table id="reservacion-tabla" className="table table-hover table-bordered align-middle mb-0">
         <thead className="table-dark">
           <tr>
             <th scope="col">Cliente</th>
