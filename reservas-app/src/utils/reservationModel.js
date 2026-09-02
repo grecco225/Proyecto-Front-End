@@ -12,6 +12,24 @@ export const ESTADOS = [
   'cancelada'
 ];
 
+// Precio fijo por hora según la categoría
+export const PRECIOS_POR_HORA = {
+  'Sala de reuniones': 8,
+  'Cancha deportiva': 15,
+  'Consultorio': 12,
+  'Auditorio': 25,
+  'Espacio de coworking': 5
+};
+
+export function obtenerPrecioHora(categoria) {
+  return PRECIOS_POR_HORA[categoria] || 0;
+}
+
+export function calcularPrecioTotal(categoria, horas) {
+  const precioHora = obtenerPrecioHora(categoria);
+  return precioHora * (Number(horas) || 0);
+}
+
 /**
  * Retorna un objeto con la estructura de una reserva vacía.
  */
@@ -21,7 +39,8 @@ export function crearReservaVacia() {
     espacio: '',
     categoria: '',
     fecha: '',
-    hora: '',
+    horaInicio: '',
+    duracionHoras: 1,
     notas: '',
     estado: 'pendiente'
   };
@@ -29,30 +48,28 @@ export function crearReservaVacia() {
 
 /**
  * Valida una reserva contra las reglas del negocio.
- * @param {Object} reserva - La reserva actual que se está validando.
- * @param {Array} reservasExistentes - La lista completa de reservas actuales.
- * @returns {Object} Un objeto con { isValid: boolean, errors: { [key]: string } }
  */
 export function validarReserva(reserva, reservasExistentes) {
   const errors = {};
 
-  // 1. Campos obligatorios
-  if (!reserva.cliente?.trim() || !reserva.espacio?.trim() || !reserva.categoria || !reserva.fecha || !reserva.hora) {
+  if (!reserva.cliente?.trim() || !reserva.espacio?.trim() || !reserva.categoria || !reserva.fecha || !reserva.horaInicio) {
     errors.general = 'Por favor completa todos los campos obligatorios.';
   }
 
-  // 2. La fecha no puede ser anterior a hoy
+  if (!reserva.duracionHoras || reserva.duracionHoras < 1) {
+    errors.duracion = 'La duración debe ser de al menos 1 hora.';
+  }
+
   const hoy = new Date().toISOString().split('T')[0];
   if (reserva.fecha && reserva.fecha < hoy) {
     errors.fecha = 'La fecha no puede ser anterior a hoy.';
   }
 
-  // 3. No permitir conflictos de horario (mismo espacio, fecha y hora en reservas activas)
   const hayConflicto = reservasExistentes.some(r =>
     r.id !== reserva.id &&
     r.espacio.trim().toLowerCase() === reserva.espacio.trim().toLowerCase() &&
     r.fecha === reserva.fecha &&
-    r.hora === reserva.hora &&
+    r.horaInicio === reserva.horaInicio &&
     r.estado !== 'cancelada'
   );
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import { calcularPrecioTotal } from '../utils/reservationModel';
 
 export default function ReservationItem({ reserva, onEditar, onEliminar, onCambiarEstado }) {
   const esConfirmada = reserva.estado === 'confirmada';
   const esCancelada = reserva.estado === 'cancelada';
+  const precioTotal = calcularPrecioTotal(reserva.categoria, reserva.duracionHoras);
 
-  // Traduce el estado a clases CSS de badges de Bootstrap 5
   const obtenerClaseEstado = (estado) => {
     const clases = {
       pendiente: 'text-bg-warning',
@@ -20,7 +21,9 @@ export default function ReservationItem({ reserva, onEditar, onEliminar, onCambi
       <td>{reserva.espacio}</td>
       <td>{reserva.categoria}</td>
       <td>{reserva.fecha}</td>
-      <td>{reserva.hora}</td>
+      <td>{reserva.horaInicio}</td>
+      <td>{reserva.duracionHoras}h</td>
+      <td>${precioTotal}</td>
       <td>{reserva.notes || reserva.notas || ''}</td>
       <td>
         <span className={`badge ${obtenerClaseEstado(reserva.estado)}`}>

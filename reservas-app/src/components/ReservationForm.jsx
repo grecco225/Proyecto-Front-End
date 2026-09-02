@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { crearReservaVacia, validarReserva } from '../utils/reservationModel';
+import { crearReservaVacia, validarReserva, calcularPrecioTotal, obtenerPrecioHora } from '../utils/reservationModel';
 
 function ReservationForm({ onGuardar, reservaEditando, onCancelarEdicion, reservasExistentes }) {
     const [form, setForm] = useState(crearReservaVacia());
     const [errores, setErrores] = useState({});
+    const [guardando, setGuardando] = useState(false);
 
     useEffect(() => {
         if (reservaEditando) {
@@ -19,16 +20,25 @@ function ReservationForm({ onGuardar, reservaEditando, onCancelarEdicion, reserv
     function handleSubmit(e) {
         e.preventDefault();
 
-        const erroresValidacion = validarReserva(form, reservasExistentes);
-        if (Object.keys(erroresValidacion).length > 0) {
-            setErrores(erroresValidacion);
+        const { isValid, errors } = validarReserva(form, reservasExistentes);
+        if (!isValid) {
+            setErrores(errors);
             return;
         }
 
         setErrores({});
-        onGuardar(form);
-        setForm(crearReservaVacia());
+        setGuardando(true);
+
+        // Simula un pequeño tiempo de guardado para dar feedback visual
+        setTimeout(() => {
+            onGuardar(form);
+            setForm(crearReservaVacia());
+            setGuardando(false);
+        }, 600);
     }
+
+    const precioHora = obtenerPrecioHora(form.categoria);
+    const precioTotal = calcularPrecioTotal(form.categoria, form.duracionHoras);
 
     return (
         <form id="reservation-form" className="row g-3" onSubmit={handleSubmit}>
@@ -64,6 +74,9 @@ function ReservationForm({ onGuardar, reservaEditando, onCancelarEdicion, reserv
                     <option value="Auditorio">Auditorio</option>
                     <option value="Espacio de coworking">Espacio de coworking</option>
                 </select>
+                {form.categoria && (
+                    <div className="form-text">Precio por hora: ${precioHora}</div>
+                )}
             </div>
 
             <div className="form-grupo col-md-6">
@@ -76,11 +89,21 @@ function ReservationForm({ onGuardar, reservaEditando, onCancelarEdicion, reserv
             </div>
 
             <div className="form-grupo col-md-6">
-                <label htmlFor="hora" className="form-label">Hora</label>
+                <label htmlFor="horaInicio" className="form-label">Hora de inicio</label>
                 <input
-                    type="time" id="hora" name="hora" className="form-control"
-                    value={form.hora} onChange={handleChange}
+                    type="time" id="horaInicio" name="horaInicio" className="form-control"
+                    value={form.horaInicio} onChange={handleChange}
                 />
+            </div>
+
+            <div className="form-grupo col-md-6">
+                <label htmlFor="duracionHoras" className="form-label">N° de horas</label>
+                <input
+                    type="number" id="duracionHoras" name="duracionHoras" min="1"
+                    className="form-control"
+                    value={form.duracionHoras} onChange={handleChange}
+                />
+                {errores.duracion && <span className="error-msg">{errores.duracion}</span>}
             </div>
 
             <div className="form-grupo col-12">
@@ -92,14 +115,28 @@ function ReservationForm({ onGuardar, reservaEditando, onCancelarEdicion, reserv
                 ></textarea>
             </div>
 
+            {form.categoria && form.duracionHoras > 0 && (
+                <div className="col-12">
+                    <strong>Total estimado: ${precioTotal}</strong>
+                </div>
+            )}
+
+            {errores.general && <div className="col-12"><span className="error-msg">{errores.general}</span></div>}
             {errores.conflicto && <span className="error-msg">{errores.conflicto}</span>}
 
             <div className="col-12">
-                <button type="submit" id="submit-btn" className="btn btn-primary">
-                    {reservaEditando ? 'Guardar cambios' : 'Crear reserva'}
+                <button type="submit" id="submit-btn" className="btn btn-primary" disabled={guardando}>
+                    {guardando ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Guardando...
+                        </>
+                    ) : (
+                        reservaEditando ? 'Guardar cambios' : 'Crear reserva'
+                    )}
                 </button>
                 {reservaEditando && (
-                    <button type="button" className="btn btn-secondary ms-2" onClick={onCancelarEdicion}>
+                    <button type="button" className="btn btn-secondary ms-2" onClick={onCancelarEdicion} disabled={guardando}>
                         Cancelar
                     </button>
                 )}
