@@ -24,7 +24,7 @@ export default function ReservationItem({ reserva, onEditar, onEliminar, onCambi
       <td>{reserva.horaInicio}</td>
       <td>{reserva.duracionHoras}h</td>
       <td>${precioTotal}</td>
-      <td>{reserva.notes || reserva.notas || ''}</td>
+      <td>{reserva.notas || reserva.notes || ''}</td>
       <td>
         <span className={`badge ${obtenerClaseEstado(reserva.estado)}`}>
           {reserva.estado}

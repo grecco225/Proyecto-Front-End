@@ -44,7 +44,7 @@ export default function ReservationList({
           <tbody>
             {mostrarMensajeVacio ? (
               <tr>
-                <td colSpan="8" className="text-center py-4 text-muted">
+                <td colSpan="10" className="text-center py-4 text-muted">
                   {totalReservasCount === 0
                     ? 'No hay reservas disponibles o registradas todavía.'
                     : 'No hay reservas que coincidan con la búsqueda o los filtros.'}

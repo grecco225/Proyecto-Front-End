@@ -6,36 +6,60 @@ import ReservationList from './components/ReservationList';
 import Statistics from './components/Statistics';
 import SearchBar from './components/SearchBar';
 import Filter from './components/Filter';
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
-    const [reservas, setReservas] = useState([]);
+    const [reservas, setReservas] = useLocalStorage('reservasApp', []);
     const [vista, setVista] = useState('inicio');
     const [busqueda, setBusqueda] = useState('');
     const [filtroCategoria, setFiltroCategoria] = useState('todas');
     const [filtroEstado, setFiltroEstado] = useState('todos');
     const [mensaje, setMensaje] = useState('');
+    const [reservaEditando, setReservaEditando] = useState(null);
 
     function mostrarMensaje(texto) {
         setMensaje(texto);
-        setTimeout(() => setMensaje(''), 3000); // desaparece solo a los 3 segundos
+        setTimeout(() => setMensaje(''), 3000);
     }
 
-    function handleGuardar(nuevaReserva) {
-        setReservas([...reservas, { ...nuevaReserva, id: Date.now(), estado: 'pendiente' }]);
+    function handleGuardar(reserva) {
+        const reservaCompleta = {
+            ...reserva,
+            estado: reserva.estado || 'pendiente'
+        };
+
+        if (reservaEditando && reservaEditando.id) {
+            setReservas(prev => prev.map(r => r.id === reservaEditando.id ? { ...r, ...reservaCompleta } : r));
+            mostrarMensaje('Reserva actualizada con éxito.');
+        } else {
+            setReservas(prev => [...prev, { ...reservaCompleta, id: Date.now() }]);
+            mostrarMensaje('Reserva creada con éxito.');
+        }
+
+        setReservaEditando(null);
         setVista('reservas');
-        mostrarMensaje('Reserva creada con éxito.');
+    }
+
+    function handleEditar(reserva) {
+        setReservaEditando(reserva);
+        setVista('nueva');
+    }
+
+    function handleCancelarEdicion() {
+        setReservaEditando(null);
+        setVista('reservas');
     }
 
     function handleEliminar(id) {
         const confirmar = window.confirm('¿Seguro que quieres eliminar esta reserva?');
         if (confirmar) {
-            setReservas(reservas.filter(r => r.id !== id));
+            setReservas(prev => prev.filter(r => r.id !== id));
             mostrarMensaje('Reserva eliminada.');
         }
     }
 
     function handleCambiarEstado(id, nuevoEstado) {
-        setReservas(reservas.map(r => r.id === id ? { ...r, estado: nuevoEstado } : r));
+        setReservas(prev => prev.map(r => r.id === id ? { ...r, estado: nuevoEstado } : r));
     }
 
     const reservasFiltradas = reservas.filter((r) => {
@@ -72,6 +96,20 @@ function App() {
                     </>
                 )}
 
+                {vista === 'nueva' && (
+                    <div className="row justify-content-center">
+                        <div className="col-lg-8">
+                            <h2 className="mb-4">{reservaEditando ? 'Editar reserva' : 'Nueva reserva'}</h2>
+                            <ReservationForm
+                                onGuardar={handleGuardar}
+                                reservaEditando={reservaEditando}
+                                onCancelarEdicion={handleCancelarEdicion}
+                                reservasExistentes={reservas}
+                            />
+                        </div>
+                    </div>
+                )}
+
                 {vista === 'reservas' && (
                     <>
                         <div className="row g-2 mb-3">
@@ -91,7 +129,7 @@ function App() {
                         <ReservationList
                             reservas={reservasFiltradas}
                             totalReservasCount={reservas.length}
-                            onEditar={() => { }}
+                            onEditar={handleEditar}
                             onEliminar={handleEliminar}
                             onCambiarEstado={handleCambiarEstado}
                         />
