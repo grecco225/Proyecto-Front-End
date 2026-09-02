@@ -9,19 +9,31 @@ import Filter from './components/Filter';
 import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
+    // Estado principal: aquí vive la lista de reservas.
+    // Todo el resto de la app reacciona a este estado.
     const [reservas, setReservas] = useLocalStorage('reservasApp', []);
+
+    // Vistas de navegación: inicio, nueva reserva y reservas.
     const [vista, setVista] = useState('inicio');
+
+    // Filtros y búsqueda para la lista.
     const [busqueda, setBusqueda] = useState('');
     const [filtroCategoria, setFiltroCategoria] = useState('todas');
     const [filtroEstado, setFiltroEstado] = useState('todos');
+
+    // Mensaje de éxito para feedback visual.
     const [mensaje, setMensaje] = useState('');
+
+    // Reserva que se está editando actualmente.
     const [reservaEditando, setReservaEditando] = useState(null);
 
+    // Muestra un mensaje temporal en la parte superior.
     function mostrarMensaje(texto) {
         setMensaje(texto);
         setTimeout(() => setMensaje(''), 3000);
     }
 
+    // Guarda una reserva nueva o actualiza una existente.
     function handleGuardar(reserva) {
         const reservaCompleta = {
             ...reserva,
@@ -29,9 +41,11 @@ function App() {
         };
 
         if (reservaEditando && reservaEditando.id) {
+            // Actualiza la reserva cuando ya existe.
             setReservas(prev => prev.map(r => r.id === reservaEditando.id ? { ...r, ...reservaCompleta } : r));
             mostrarMensaje('Reserva actualizada con éxito.');
         } else {
+            // Crea una nueva reserva con un id único basado en la fecha actual.
             setReservas(prev => [...prev, { ...reservaCompleta, id: Date.now() }]);
             mostrarMensaje('Reserva creada con éxito.');
         }
@@ -41,16 +55,19 @@ function App() {
     }
 
     function handleEditar(reserva) {
+        // Carga la reserva seleccionada para editarla en el formulario.
         setReservaEditando(reserva);
         setVista('nueva');
     }
 
     function handleCancelarEdicion() {
+        // Limpia el estado de edición y vuelve a la lista.
         setReservaEditando(null);
         setVista('reservas');
     }
 
     function handleEliminar(id) {
+        // Elimina la reserva solo si el usuario confirma la acción.
         const confirmar = window.confirm('¿Seguro que quieres eliminar esta reserva?');
         if (confirmar) {
             setReservas(prev => prev.filter(r => r.id !== id));
@@ -59,9 +76,11 @@ function App() {
     }
 
     function handleCambiarEstado(id, nuevoEstado) {
+        // Cambia el estado de una reserva sin tocar el resto de la lista.
         setReservas(prev => prev.map(r => r.id === id ? { ...r, estado: nuevoEstado } : r));
     }
 
+    // Filtra la lista según búsqueda, categoría y estado.
     const reservasFiltradas = reservas.filter((r) => {
         const coincideBusqueda =
             r.cliente.toLowerCase().includes(busqueda.toLowerCase()) ||

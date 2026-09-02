@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
+// Hook personalizado para leer y guardar datos en localStorage.
+// Esto permite que la app recuerde las reservas aunque se recargue la página.
 function useLocalStorage(key, initialValue) {
+    // Se ejecuta solo al iniciar el componente.
+    // Intenta leer el valor guardado; si no existe, usa el valor inicial.
     const [storedValue, setStoredValue] = useState(() => {
         try {
             const item = window.localStorage.getItem(key);
@@ -11,6 +15,8 @@ function useLocalStorage(key, initialValue) {
         }
     });
 
+    // Guarda el valor actualizado en localStorage.
+    // value instanceof Function permite pasar una función como setState.
     const setValue = (value) => {
         try {
             const valueToStore =
